@@ -51,7 +51,7 @@ function newQuote() {
     }
 
     // Change quote font size based on length
-    if(pageQuote.textContent.length < 120) {
+    if(pageQuote.textContent.length > 120) {
       pageQuote.classList.add("long-quote");
     } else {
       pageQuote.classList.remove("long-quote");
