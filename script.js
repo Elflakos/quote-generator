@@ -1,13 +1,27 @@
+const quoteContainer = document.querySelector("#quote__container")
 const pageQuote = document.querySelector("#quote");
 const pageAuthor = document.querySelector("#author");
 const pageCategory = document.querySelector("#category-name");
 const newQuoteBtn = document.querySelector("#new-quote");
 const categoryDropdown = document.querySelector("#category");
 const twitterButton = document.querySelector("#twitter");
+const loader = document.querySelector("#loader");
 
 let apiQuotes = [];
 const quoteCategories = [];
 let filteredQuotes = [];
+
+// Show loading
+function loading() {
+  loader.hidden = false;
+  quoteContainer.hidden = true;
+}
+
+// Hide loading
+function complete() {
+  loader.hidden = true;
+  quoteContainer.hidden = false;
+}
 
 // Uppercase first letter of word
 function uppercase(word) {
@@ -17,20 +31,26 @@ function uppercase(word) {
 
 // Show New Quote
 function newQuote() {
+    loading();
     if(categoryDropdown.value === "all") {
       // Pick a random quote from apiQuotes array
       const quote = apiQuotes[Math.floor(Math.random() * apiQuotes.length)];
       pageQuote.textContent = quote.text;
       pageAuthor.textContent = quote.author;
       pageCategory.textContent= uppercase(quote.tag);
+      // Hide loader once quote is set
+      complete();
     } else {
       // Pick a random quote from filtered quote array
       let filterQuote = filteredQuotes[Math.floor(Math.random() * filteredQuotes.length)];
       pageQuote.textContent = filterQuote.text;
       pageAuthor.textContent = filterQuote.author;
       pageCategory.textContent= uppercase(filterQuote.tag);
+      // Hide loader once quote is set
+      complete();
     }
 
+    // Change quote font size based on length
     if(pageQuote.textContent.length < 120) {
       pageQuote.classList.add("long-quote");
     } else {
@@ -70,6 +90,7 @@ function catArray() {
   })
 }
 
+// Tweet Quote
 function tweetQuote() {
   let twitterUrl = `https://twitter.com/intent/tweet?text=${pageQuote.textContent} - ${pageAuthor.textContent}`;
   window.open(twitterUrl, "_blank");
@@ -77,6 +98,7 @@ function tweetQuote() {
 
 //  Get Quotes from API
 async function getQuotes() {
+  loading();
   const apiUrl = "https://jacintodesign.github.io/quotes-api/data/quotes.json";
   try {
     const response = await fetch(apiUrl);
@@ -90,6 +112,7 @@ async function getQuotes() {
   }
 }
 
+// Event listeners
 newQuoteBtn.addEventListener("click", newQuote);
 categoryDropdown.addEventListener("change", catArray);
 twitterButton.addEventListener("click", tweetQuote)
