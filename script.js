@@ -1,12 +1,13 @@
-let apiQuotes = [];
-const quoteCategories = [];
-let filteredQuotes = [];
-
 const pageQuote = document.querySelector("#quote");
 const pageAuthor = document.querySelector("#author");
 const pageCategory = document.querySelector("#category-name");
 const newQuoteBtn = document.querySelector("#new-quote");
 const categoryDropdown = document.querySelector("#category");
+const twitterButton = document.querySelector("#twitter");
+
+let apiQuotes = [];
+const quoteCategories = [];
+let filteredQuotes = [];
 
 // Uppercase first letter of word
 function uppercase(word) {
@@ -28,6 +29,12 @@ function newQuote() {
       pageQuote.textContent = filterQuote.text;
       pageAuthor.textContent = filterQuote.author;
       pageCategory.textContent= uppercase(filterQuote.tag);
+    }
+
+    if(pageQuote.textContent.length < 120) {
+      pageQuote.classList.add("long-quote");
+    } else {
+      pageQuote.classList.remove("long-quote");
     }
 }
 
@@ -63,6 +70,11 @@ function catArray() {
   })
 }
 
+function tweetQuote() {
+  let twitterUrl = `https://twitter.com/intent/tweet?text=${pageQuote.textContent} - ${pageAuthor.textContent}`;
+  window.open(twitterUrl, "_blank");
+}
+
 //  Get Quotes from API
 async function getQuotes() {
   const apiUrl = "https://jacintodesign.github.io/quotes-api/data/quotes.json";
@@ -80,6 +92,7 @@ async function getQuotes() {
 
 newQuoteBtn.addEventListener("click", newQuote);
 categoryDropdown.addEventListener("change", catArray);
+twitterButton.addEventListener("click", tweetQuote)
 
 // On Load
 getQuotes();
